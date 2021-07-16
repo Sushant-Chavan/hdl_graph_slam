@@ -14,10 +14,14 @@
   <!-- optional arguments -->
   <arg name="enable_robot_odometry_init_guess" default="false" />
   <arg name="robot_odom_frame_id" default="rslidar" />
+
+  <!-- Custom components -->
   <arg name="play_bag" default="false" />
   <arg name="bag_file" default="" />
   <arg name="start_rviz" default="false" />
   <arg name="rviz_config" default="$(find hdl_graph_slam)/rviz/hdl_graph_slam_kelo.rviz" />
+  <arg name="cloud_slicer" default="true" />
+
 
   <!-- transformation between lidar and base_link -->
   <node pkg="tf" type="static_transform_publisher" name="lidar2base_publisher" args="0 0 0 0 0 0 base_link rslidar 10" />
@@ -164,5 +168,10 @@
   <node pkg="hdl_graph_slam" type="bag_player.py" name="bag_player" args="$(arg bag_file)" if="$(arg play_bag)"/>
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" if="$(arg start_rviz)"/>
+
+  <include file="$(find point_cloud_utils)/launch/point_cloud_slice.launch" if="$(arg cloud_slicer)">
+    <arg name="cloud_in" value="/hdl_graph_slam/map_points" />
+  </include>
+
 
 </launch>
