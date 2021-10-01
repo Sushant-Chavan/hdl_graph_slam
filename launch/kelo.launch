@@ -7,13 +7,13 @@
   <arg name="enable_imu_acc" default="false" />
   <arg name="enable_imu_ori" default="false" />
 
-  <arg name="points_topic" default="/rslidar_points" />
+  <arg name="points_topic" default="/rslidar_concat" />
   <arg name="map_frame_id" default="map" />
   <arg name="lidar_odom_frame_id" default="odom" />
 
   <!-- optional arguments -->
   <arg name="enable_robot_odometry_init_guess" default="false" />
-  <arg name="robot_odom_frame_id" default="rslidar" />
+  <arg name="robot_odom_frame_id" default="base_link" />
 
   <!-- Custom components -->
   <arg name="play_bag" default="false" />
@@ -24,7 +24,7 @@
 
 
   <!-- transformation between lidar and base_link -->
-  <node pkg="tf" type="static_transform_publisher" name="lidar2base_publisher" args="0 0 0 0 0 0 base_link rslidar 10" />
+  <!-- <node pkg="tf" type="static_transform_publisher" name="lidar2base_publisher" args="0 0 0 0 0 0 base_link rslidar 10" /> -->
   <node pkg="tf" type="static_transform_publisher" name="imu2base_publisher" args="0 0 0 0 0 0 base_link imu_link 10" />
 
   <!-- in case you use velodyne_driver, comment out the following line -->
@@ -83,11 +83,11 @@
   <node pkg="nodelet" type="nodelet" name="floor_detection_nodelet" args="load hdl_graph_slam/FloorDetectionNodelet $(arg nodelet_manager)" if="$(arg enable_floor_detection)">
     <param name="points_topic" value="$(arg points_topic)" />
     <param name="tilt_deg" value="0.0" />
-    <param name="sensor_height" value="1.5" />
+    <param name="sensor_height" value="0.0" />
     <param name="height_clip_range" value="0.5" />
     <param name="floor_pts_thresh" value="256" />
     <param name="use_normal_filtering" value="true" />
-    <param name="normal_filter_thresh" value="20.0" />
+    <param name="normal_filter_thresh" value="30.0" />
   </node>
 
   <!-- hdl_graph_slam_nodelet -->
@@ -169,9 +169,9 @@
 
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz_config)" if="$(arg start_rviz)"/>
 
-  <include file="$(find point_cloud_utils)/launch/point_cloud_slice.launch" if="$(arg cloud_slicer)">
+  <!-- <include file="$(find point_cloud_utils)/launch/point_cloud_slice.launch" if="$(arg cloud_slicer)">
     <arg name="cloud_in" value="/hdl_graph_slam/map_points" />
-  </include>
+  </include> -->
 
 
 </launch>
